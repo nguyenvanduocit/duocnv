@@ -89,7 +89,7 @@ function Header() {
     <Box flexDirection="column">
       <Text> </Text>
       <Text>{coolGradient(logoText)}</Text>
-      <Text dimColor> Engineering Manager • Curious Mind</Text>
+      <Text dimColor> From Vietnam</Text>
       <Text> </Text>
       <Text>
         {"  "}
@@ -124,7 +124,7 @@ function Header() {
       <Text>
         {" "}
         <Text bold>Hi, I'm Được Nguyễn</Text>{" "}
-        <Text dimColor>- a curious developer from Vietnam</Text>
+        <Text dimColor>- Engineering Manager • Curious Mind</Text>
       </Text>
       <Text> </Text>
       <Text dimColor> I like building small tools that solve my own problems.</Text>
@@ -149,11 +149,6 @@ function Header() {
         {" "}
         <Text color="cyan">→</Text> <Text dimColor>Twitter:</Text>{" "}
         <Text color="cyan">{link(links.twitter, "@duocdev")}</Text>
-      </Text>
-      <Text>
-        {" "}
-        <Text color="cyan">→</Text> <Text dimColor>Blog:</Text>{" "}
-        <Text color="cyan">{link(links.blog, "12bit.vn")}</Text>
       </Text>
       <Text> </Text>
     </Box>
