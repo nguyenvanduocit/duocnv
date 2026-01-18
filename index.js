@@ -132,7 +132,10 @@ function Header() {
       <Text dimColor> (reading helper) in my spare time.</Text>
       <Text> </Text>
       <Text dimColor> Day job: Engineering Manager, helping teams ship good software.</Text>
-      <Text dimColor> Side quests: Open source, writing at 12bit.vn, and learning new things.</Text>
+      <Text dimColor> Side quests: Open source, writing, and learning new things.</Text>
+      <Text> </Text>
+      <Text dimColor> All my side projects live at aiocean.io</Text>
+      <Text dimColor> I write at 12bit.vn (Vietnamese) and onepercent.plus (English)</Text>
       <Text> </Text>
       <Text dimColor> Helped start Vue.js Vietnam community back in 2016.</Text>
       <Text dimColor> Still believe in sharing knowledge and helping others grow.</Text>
