@@ -33,30 +33,24 @@ const links = {
 
 const projectDetails = {
   clik: {
-    title: "Clik - Screenshot Tool for AI Workflows",
+    title: "Clik - Screenshot Tool",
     stats: [
-      "5 annotation tools",
-      "Counter markers for AI reference",
-      "Multi-capture sessions",
-      "Keyboard-first, ~15MB",
+      "Annotate screenshots for AI prompts",
+      "Counter markers for referencing",
+      "Keyboard-first workflow",
     ],
     tech: "Tauri + Rust + React",
     url: "https://clik.aiocean.io",
   },
   justread: {
-    title: "Just Read - AI-Powered Reading Platform",
-    stats: [
-      "Smart translation for learners",
-      "EPUB/PDF support",
-      "AI-assisted comprehension",
-      "Vocabulary building",
-    ],
-    tech: "TypeScript, AI/ML",
+    title: "Just Read - Reading Helper",
+    stats: ["Translation for English learners", "EPUB/PDF support", "Built for my own learning"],
+    tech: "TypeScript",
     url: "https://aiocean.io",
   },
   obsidian: {
-    title: "Obsidian Open Gate - Web Integration Plugin",
-    stats: ["35K+ installations", "211 GitHub stars", "Embed any webpage", "Zero-config setup"],
+    title: "Obsidian Open Gate",
+    stats: ["Embed webpages in Obsidian", "Simple plugin I made", "Open source"],
     tech: "TypeScript, Obsidian API",
     url: "https://github.com/nguyenvanduocit/obsidian-open-gate",
   },
@@ -95,7 +89,7 @@ function Header() {
     <Box flexDirection="column">
       <Text> </Text>
       <Text>{coolGradient(logoText)}</Text>
-      <Text dimColor> Tech Entrepreneur • Community Builder • Knowledge Sharer</Text>
+      <Text dimColor> Engineering Manager • Curious Mind</Text>
       <Text> </Text>
       <Text>
         {"  "}
@@ -130,18 +124,18 @@ function Header() {
       <Text>
         {" "}
         <Text bold>Hi, I'm Được Nguyễn</Text>{" "}
-        <Text dimColor>- Tech Ecosystem Builder from Vietnam</Text>
+        <Text dimColor>- a curious developer from Vietnam</Text>
       </Text>
       <Text> </Text>
-      <Text dimColor> I build developer tools and production systems at scale.</Text>
-      <Text dimColor> Currently focused on AI-powered productivity tools:</Text>
-      <Text dimColor>
-        {" "}
-        Clik (screenshot annotations for AI) and Just Read (AI reading assistant).
-      </Text>
+      <Text dimColor> I like building small tools that solve my own problems.</Text>
+      <Text dimColor> Currently tinkering with Clik (screenshot tool) and Just Read</Text>
+      <Text dimColor> (reading helper) in my spare time.</Text>
       <Text> </Text>
-      <Text dimColor> Co-founded Vue.js Vietnam community. I believe in building tools</Text>
-      <Text dimColor> that make developers more productive and leaving the world better.</Text>
+      <Text dimColor> Day job: Engineering Manager, helping teams ship good software.</Text>
+      <Text dimColor> Side quests: Open source, writing at 12bit.vn, and learning new things.</Text>
+      <Text> </Text>
+      <Text dimColor> Helped start Vue.js Vietnam community back in 2016.</Text>
+      <Text dimColor> Still believe in sharing knowledge and helping others grow.</Text>
       <Text> </Text>
       <Text>
         {" "}
@@ -290,9 +284,9 @@ function MainMenu({ onSelect, onEasterEgg }) {
 
 function ProjectsMenu({ onSelect, onBack }) {
   const items = [
-    { label: "Clik", value: "clik", hint: "Screenshot tool for AI workflows • Tauri + Rust" },
-    { label: "Just Read", value: "justread", hint: "AI-powered reading • Smart translation" },
-    { label: "Obsidian Open Gate", value: "obsidian", hint: "35K+ installations • 211 stars" },
+    { label: "Clik", value: "clik", hint: "Screenshot annotations" },
+    { label: "Just Read", value: "justread", hint: "Reading helper for learners" },
+    { label: "Obsidian Open Gate", value: "obsidian", hint: "Embed webpages in Obsidian" },
   ];
 
   useInput((_, key) => {

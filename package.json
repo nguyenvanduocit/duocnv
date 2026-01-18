@@ -20,7 +20,7 @@
     "url": "git+https://github.com/nguyenvanduocit/duocnv.git"
   },
   "bin": {
-    "duocnv": "./index.js"
+    "duocnv": "index.js"
   },
   "files": [
     "index.js"
