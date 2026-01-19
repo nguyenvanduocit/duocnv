@@ -11,6 +11,7 @@ import { platform } from "os";
 const coolGradient = gradient(["#00d4ff", "#7c3aed", "#f472b6"]);
 const PROFILE_URL =
   "https://raw.githubusercontent.com/nguyenvanduocit/nguyenvanduocit/master/profile.json";
+const MAX_WIDTH = 80;
 
 // Default fallback data
 const defaultProfile = {
@@ -137,7 +138,7 @@ function Header({ profile }) {
         "Leave the world better than we found it"
       </Text>
       <Text> </Text>
-      <Text dimColor> ─────────────────────────────────────────────────────────────────</Text>
+      <Text dimColor> {"─".repeat(MAX_WIDTH - 2)}</Text>
       <Text> </Text>
       <Text>
         {" "}
@@ -382,7 +383,7 @@ function App() {
 
   if (showEasterEgg) {
     return (
-      <Box flexDirection="column">
+      <Box flexDirection="column" width={MAX_WIDTH}>
         <Header profile={profile} />
         <EasterEgg onClose={() => setShowEasterEgg(false)} />
       </Box>
@@ -390,7 +391,7 @@ function App() {
   }
 
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" width={MAX_WIDTH}>
       <Header profile={profile} />
       {screen === "main" && (
         <MainMenu onSelect={setScreen} onEasterEgg={() => setShowEasterEgg(true)} />
