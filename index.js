@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { render, Box, Text, useInput, useApp } from "ink";
 import SelectInput from "ink-select-input";
 import gradient from "gradient-string";
@@ -9,57 +9,64 @@ import { spawn } from "child_process";
 import { platform } from "os";
 
 const coolGradient = gradient(["#00d4ff", "#7c3aed", "#f472b6"]);
+const PROFILE_URL =
+  "https://raw.githubusercontent.com/nguyenvanduocit/nguyenvanduocit/master/profile.json";
+
+// Default fallback data
+const defaultProfile = {
+  name: "Duoc Nguyen",
+  tagline: "Pi-shaped engineer: Backend/AI tooling × AI agents/MCP × Product iteration",
+  stats: { years: 13, commits: "5K+", repos: 425, stars: "1.8K" },
+  projects: [
+    {
+      id: "jira-mcp",
+      title: "Jira MCP",
+      description: "AI-Jira bridge for Claude",
+      tech: "Go",
+      url: "https://github.com/nguyenvanduocit/jira-mcp",
+      stars: 79,
+    },
+    {
+      id: "obsidian-open-gate",
+      title: "Obsidian Open Gate",
+      description: "Embed webpages in Obsidian",
+      tech: "TypeScript",
+      url: "https://github.com/nguyenvanduocit/obsidian-open-gate",
+      stars: 219,
+    },
+    {
+      id: "duocnv",
+      title: "duocnv",
+      description: "This terminal card",
+      tech: "TypeScript",
+      url: "https://github.com/nguyenvanduocit/duocnv",
+    },
+  ],
+  now: ["Building Claude plugin ecosystem", "Shipping interactive dev tools"],
+  links: {
+    github: "https://github.com/nguyenvanduocit",
+    twitter: "https://x.com/duocdev",
+    linkedin: "https://linkedin.com/in/duocnv",
+    blog: "https://12bit.vn",
+    website: "https://onepercent.plus",
+  },
+};
 
 // Terminal hyperlink (OSC 8)
 const link = (url, text) => `\x1b]8;;${url}\x07${text}\x1b]8;;\x07`;
 
-// Open URL in browser safely using spawn
+// Open URL in browser
 const openBrowser = (url) => {
   const cmd = platform() === "darwin" ? "open" : platform() === "win32" ? "cmd" : "xdg-open";
   const args = platform() === "win32" ? ["/c", "start", url] : [url];
   spawn(cmd, args, { detached: true, stdio: "ignore" }).unref();
 };
 
-// Konami code sequence
+// Konami code
 const KONAMI = ["up", "up", "down", "down", "left", "right", "left", "right", "b", "a"];
 
-const links = {
-  github: "https://github.com/nguyenvanduocit",
-  twitter: "https://x.com/duocdev",
-  linkedin: "https://linkedin.com/in/duocnv",
-  blog: "https://12bit.vn",
-  website: "https://onepercent.plus",
-};
-
-const projectDetails = {
-  clik: {
-    title: "Clik - Screenshot Tool",
-    stats: [
-      "Annotate screenshots for AI prompts",
-      "Counter markers for referencing",
-      "Keyboard-first workflow",
-    ],
-    tech: "Tauri + Rust + React",
-    url: "https://clik.aiocean.io",
-  },
-  justread: {
-    title: "Just Read - Reading Helper",
-    stats: ["Translation for English learners", "EPUB/PDF support", "Built for my own learning"],
-    tech: "TypeScript",
-    url: "https://aiocean.io",
-  },
-  obsidian: {
-    title: "Obsidian Open Gate",
-    stats: ["Embed webpages in Obsidian", "Simple plugin I made", "Open source"],
-    tech: "TypeScript, Obsidian API",
-    url: "https://github.com/nguyenvanduocit/obsidian-open-gate",
-  },
-};
-
-// Konami code hook
 function useKonamiCode(onActivate) {
   const sequence = useRef([]);
-
   useInput((input, key) => {
     let pressed = null;
     if (key.upArrow) pressed = "up";
@@ -68,12 +75,9 @@ function useKonamiCode(onActivate) {
     else if (key.rightArrow) pressed = "right";
     else if (input === "b") pressed = "b";
     else if (input === "a") pressed = "a";
-
     if (pressed) {
       sequence.current.push(pressed);
-      if (sequence.current.length > KONAMI.length) {
-        sequence.current.shift();
-      }
+      if (sequence.current.length > KONAMI.length) sequence.current.shift();
       if (sequence.current.join(",") === KONAMI.join(",")) {
         sequence.current = [];
         onActivate();
@@ -82,8 +86,9 @@ function useKonamiCode(onActivate) {
   });
 }
 
-function Header() {
+function Header({ profile }) {
   const logoText = figlet.textSync("DUOC  NV", { font: "ANSI Shadow", horizontalLayout: "fitted" });
+  const { stats, links } = profile;
 
   return (
     <Box flexDirection="column">
@@ -94,22 +99,22 @@ function Header() {
       <Text>
         {"  "}
         <Text color="cyan" bold>
-          13+
+          {stats.years}+
         </Text>{" "}
         <Text dimColor>years coding</Text>
         <Text dimColor> • </Text>
         <Text color="cyan" bold>
-          5K+
+          {stats.commits}
         </Text>{" "}
         <Text dimColor>commits</Text>
         <Text dimColor> • </Text>
         <Text color="cyan" bold>
-          425
+          {stats.repos}
         </Text>{" "}
         <Text dimColor>repositories</Text>
         <Text dimColor> • </Text>
         <Text color="cyan" bold>
-          1.8K
+          {stats.stars}
         </Text>{" "}
         <Text dimColor>GitHub stars</Text>
       </Text>
@@ -123,22 +128,11 @@ function Header() {
       <Text> </Text>
       <Text>
         {" "}
-        <Text bold>Hi, I'm Được Nguyễn</Text>{" "}
+        <Text bold>Hi, I'm {profile.name}</Text>{" "}
         <Text dimColor>- Engineering Manager • Curious Mind</Text>
       </Text>
       <Text> </Text>
-      <Text dimColor> I like building small tools that solve my own problems.</Text>
-      <Text dimColor> Currently tinkering with Clik (screenshot tool) and Just Read</Text>
-      <Text dimColor> (reading helper) in my spare time.</Text>
-      <Text> </Text>
-      <Text dimColor> Day job: Engineering Manager, helping teams ship good software.</Text>
-      <Text dimColor> Side quests: Open source, writing, and learning new things.</Text>
-      <Text> </Text>
-      <Text dimColor> All my side projects live at aiocean.io</Text>
-      <Text dimColor> I write at 12bit.vn (Vietnamese) and onepercent.plus (English)</Text>
-      <Text> </Text>
-      <Text dimColor> Helped start Vue.js Vietnam community back in 2016.</Text>
-      <Text dimColor> Still believe in sharing knowledge and helping others grow.</Text>
+      <Text dimColor> {profile.tagline}</Text>
       <Text> </Text>
       <Text>
         {" "}
@@ -168,24 +162,17 @@ function EasterEgg({ onClose }) {
   useInput((_, key) => {
     if (key.escape || key.return) onClose();
   });
-
   const art = `
     ╔══════════════════════════════════════════╗
-    ║                                          ║
     ║   🎮  KONAMI CODE ACTIVATED!  🎮         ║
-    ║                                          ║
-    ║   You found the secret!                  ║
     ║                                          ║
     ║   Fun fact: I've been coding since       ║
     ║   2011 and still use "console.log"       ║
-    ║   for debugging. Some things never       ║
-    ║   change. 😄                             ║
+    ║   for debugging. 😄                      ║
     ║                                          ║
     ║   Thanks for exploring my card!          ║
-    ║                                          ║
     ╚══════════════════════════════════════════╝
   `;
-
   return (
     <Box flexDirection="column" marginLeft={2}>
       <Text color="magenta">{art}</Text>
@@ -195,49 +182,45 @@ function EasterEgg({ onClose }) {
 }
 
 function ProjectDetail({ project, onBack }) {
-  const detail = projectDetails[project];
-
   useInput((_, key) => {
     if (key.escape) onBack();
-    if (key.return) openBrowser(detail.url);
+    if (key.return) openBrowser(project.url);
   });
 
   return (
     <Box flexDirection="column" marginLeft={2}>
       <Text> </Text>
       <Text color="cyan" bold>
-        {detail.title}
+        {project.title}
       </Text>
-      <Text> </Text>
-      {detail.stats.map((stat, i) => (
-        <Text key={i}>
-          {" "}
-          • <Text color="yellow">{stat}</Text>
-        </Text>
-      ))}
-      <Text> </Text>
-      <Text dimColor> {detail.tech}</Text>
       <Text> </Text>
       <Text>
         {" "}
-        <Text color="cyan">{link(detail.url, detail.url)}</Text>
+        • <Text color="yellow">{project.description}</Text>
+      </Text>
+      {project.stars && (
+        <Text>
+          {" "}
+          • <Text color="yellow">{project.stars} stars</Text>
+        </Text>
+      )}
+      <Text> </Text>
+      <Text dimColor> {project.tech}</Text>
+      <Text> </Text>
+      <Text>
+        {" "}
+        <Text color="cyan">{link(project.url, project.url)}</Text>
       </Text>
       <HintBar hints="Enter to open in browser · Esc to back" />
     </Box>
   );
 }
 
-function LinkDetail({ platform: plat, onBack }) {
-  const url = links[plat];
-
-  useState(() => {
-    openBrowser(url);
-  });
-
+function LinkDetail({ url, onBack }) {
+  useState(() => openBrowser(url));
   useInput((_, key) => {
     if (key.escape) onBack();
   });
-
   return (
     <Box flexDirection="column" marginLeft={2}>
       <Text> </Text>
@@ -254,11 +237,8 @@ function MainMenu({ onSelect, onEasterEgg }) {
     { label: "View projects", value: "projects", hint: "Things I've built" },
     { label: "Connect with me", value: "connect", hint: "Social links" },
   ];
-
   const { exit } = useApp();
-
   useKonamiCode(onEasterEgg);
-
   useInput((_, key) => {
     if (key.escape) exit();
   });
@@ -280,12 +260,12 @@ function MainMenu({ onSelect, onEasterEgg }) {
   );
 }
 
-function ProjectsMenu({ onSelect, onBack }) {
-  const items = [
-    { label: "Clik", value: "clik", hint: "Screenshot annotations" },
-    { label: "Just Read", value: "justread", hint: "Reading helper for learners" },
-    { label: "Obsidian Open Gate", value: "obsidian", hint: "Embed webpages in Obsidian" },
-  ];
+function ProjectsMenu({ projects, onSelect, onBack }) {
+  const items = projects.map((p) => ({
+    label: p.title,
+    value: p.id,
+    hint: p.description,
+  }));
 
   useInput((_, key) => {
     if (key.escape) onBack();
@@ -310,7 +290,7 @@ function ProjectsMenu({ onSelect, onBack }) {
   );
 }
 
-function ConnectMenu({ onSelect, onBack }) {
+function ConnectMenu({ links, onSelect, onBack }) {
   const items = [
     { label: "GitHub", value: "github", hint: "@nguyenvanduocit" },
     { label: "X (Twitter)", value: "twitter", hint: "@duocdev" },
@@ -329,7 +309,7 @@ function ConnectMenu({ onSelect, onBack }) {
       <Text> </Text>
       <SelectInput
         items={items}
-        onSelect={(item) => onSelect(item.value)}
+        onSelect={(item) => onSelect(links[item.value])}
         itemComponent={({ isSelected, label, hint }) => (
           <Text>
             <Text color={isSelected ? "cyan" : undefined}>{label}</Text>
@@ -342,19 +322,38 @@ function ConnectMenu({ onSelect, onBack }) {
   );
 }
 
+function Loading() {
+  return (
+    <Box flexDirection="column" padding={2}>
+      <Text color="cyan">Loading profile...</Text>
+    </Box>
+  );
+}
+
 function App() {
+  const [profile, setProfile] = useState(null);
   const [screen, setScreen] = useState("main");
   const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [selectedLink, setSelectedLink] = useState(null);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
 
-  const handleMainSelect = (value) => setScreen(value);
-  const handleProjectSelect = (value) => {
-    setSelectedProject(value);
+  useEffect(() => {
+    fetch(PROFILE_URL)
+      .then((r) => r.json())
+      .then((data) => setProfile(data))
+      .catch(() => setProfile(defaultProfile));
+  }, []);
+
+  if (!profile) return <Loading />;
+
+  const handleProjectSelect = (id) => {
+    const project = profile.projects.find((p) => p.id === id);
+    setSelectedProject(project);
     setScreen("project-detail");
   };
-  const handleConnectSelect = (value) => {
-    setSelectedPlatform(value);
+
+  const handleConnectSelect = (url) => {
+    setSelectedLink(url);
     setScreen("connect-detail");
   };
 
@@ -365,7 +364,7 @@ function App() {
   if (showEasterEgg) {
     return (
       <Box flexDirection="column">
-        <Header />
+        <Header profile={profile} />
         <EasterEgg onClose={() => setShowEasterEgg(false)} />
       </Box>
     );
@@ -373,18 +372,24 @@ function App() {
 
   return (
     <Box flexDirection="column">
-      <Header />
+      <Header profile={profile} />
       {screen === "main" && (
-        <MainMenu onSelect={handleMainSelect} onEasterEgg={() => setShowEasterEgg(true)} />
+        <MainMenu onSelect={setScreen} onEasterEgg={() => setShowEasterEgg(true)} />
       )}
-      {screen === "projects" && <ProjectsMenu onSelect={handleProjectSelect} onBack={goToMain} />}
-      {screen === "connect" && <ConnectMenu onSelect={handleConnectSelect} onBack={goToMain} />}
+      {screen === "projects" && (
+        <ProjectsMenu
+          projects={profile.projects}
+          onSelect={handleProjectSelect}
+          onBack={goToMain}
+        />
+      )}
+      {screen === "connect" && (
+        <ConnectMenu links={profile.links} onSelect={handleConnectSelect} onBack={goToMain} />
+      )}
       {screen === "project-detail" && (
         <ProjectDetail project={selectedProject} onBack={goToProjects} />
       )}
-      {screen === "connect-detail" && (
-        <LinkDetail platform={selectedPlatform} onBack={goToConnect} />
-      )}
+      {screen === "connect-detail" && <LinkDetail url={selectedLink} onBack={goToConnect} />}
     </Box>
   );
 }
