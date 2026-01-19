@@ -17,6 +17,19 @@ const defaultProfile = {
   name: "Duoc Nguyen",
   tagline: "Pi-shaped engineer: Backend/AI tooling × AI agents/MCP × Product iteration",
   stats: { years: 13, commits: "5K+", repos: 425, stars: "1.8K" },
+  bio: [
+    "I like building small tools that solve my own problems.",
+    "Currently tinkering with Clik (screenshot tool) and Just Read.",
+    "",
+    "Day job: Engineering Manager, helping teams ship good software.",
+    "Side quests: Open source, writing, and learning new things.",
+    "",
+    "All my side projects live at aiocean.io",
+    "I write at 12bit.vn (Vietnamese) and onepercent.plus (English)",
+    "",
+    "Helped start Vue.js Vietnam community back in 2016.",
+    "Still believe in sharing knowledge and helping others grow.",
+  ],
   projects: [
     {
       id: "jira-mcp",
@@ -88,7 +101,7 @@ function useKonamiCode(onActivate) {
 
 function Header({ profile }) {
   const logoText = figlet.textSync("DUOC  NV", { font: "ANSI Shadow", horizontalLayout: "fitted" });
-  const { stats, links } = profile;
+  const { stats, links, bio } = profile;
 
   return (
     <Box flexDirection="column">
@@ -132,7 +145,13 @@ function Header({ profile }) {
         <Text dimColor>- Engineering Manager • Curious Mind</Text>
       </Text>
       <Text> </Text>
-      <Text dimColor> {profile.tagline}</Text>
+      {bio &&
+        bio.map((line, i) => (
+          <Text key={`bio-${i}`} dimColor>
+            {" "}
+            {line}
+          </Text>
+        ))}
       <Text> </Text>
       <Text>
         {" "}
